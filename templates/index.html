@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Agendador de Filmes - Cinema</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cor-primaria: #e50914;
+            --cor-secundaria: #221f1f;
+            --cor-fundo: #1a1a1a;
+            --cor-texto: #ffffff;
+            --cor-sucesso: #4caf50;
+            --cor-aviso: #ff9800;
+            --cor-erro: #f44336;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--cor-fundo) 0%, #2a2a2a 100%);
+            color: var(--cor-texto);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+            border-bottom: 3px solid var(--cor-primaria);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--cor-primaria) 0%, #ff6b6b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitulo {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .painel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(229, 9, 20, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .painel h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: var(--cor-primaria);
+            border-bottom: 2px solid var(--cor-primaria);
+            padding-bottom: 10px;
+        }
+
+        .form-grupo {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #ddd;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(229, 9, 20, 0.5);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--cor-texto);
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--cor-primaria);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
+        }
+
+        .botoes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primaria {
+            background: linear-gradient(135deg, var(--cor-primaria) 0%, #cc0812 100%);
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .btn-primaria:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4);
+        }
+
+        .btn-secundaria {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--cor-texto);
+            border: 2px solid rgba(229, 9, 20, 0.5);
+        }
+
+        .btn-secundaria:hover {
+            background: rgba(229, 9, 20, 0.2);
+            border-color: var(--cor-primaria);
+        }
+
+        .btn-sucesso {
+            background: var(--cor-sucesso);
+        }
+
+        .btn-sucesso:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-aviso {
+            background: var(--cor-aviso);
+        }
+
+        .btn-aviso:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 152, 0, 0.4);
+        }
+
+        .lista-filmes {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .filme-item {
+            background: rgba(229, 9, 20, 0.1);
+            border-left: 4px solid var(--cor-primaria);
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filme-info {
+            flex: 1;
+        }
+
+        .filme-nome {
+            font-weight: 600;
+            color: var(--cor-primaria);
+            margin-bottom: 5px;
+        }
+
+        .filme-horario {
+            font-size: 0.9em;
+            color: #bbb;
+        }
+
+        .filme-duracao {
+            background: rgba(229, 9, 20, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            color: #faa;
+            font-weight: 600;
+        }
+
+        .mensagem {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .mensagem.sucesso {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--cor-sucesso);
+            border-left: 4px solid var(--cor-sucesso);
+            display: block;
+        }
+
+        .mensagem.erro {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--cor-erro);
+            border-left: 4px solid var(--cor-erro);
+            display: block;
+        }
+
+        .mensagem.info {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196f3;
+            border-left: 4px solid #2196f3;
+            display: block;
+        }
+
+        .salas-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .sala {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(229, 9, 20, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .sala:hover {
+            border-color: var(--cor-primaria);
+            background: rgba(229, 9, 20, 0.1);
+            box-shadow: 0 5px 20px rgba(229, 9, 20, 0.2);
+        }
+
+        .sala-numero {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--cor-primaria);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--cor-primaria);
+        }
+
+        .filme-sala {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--cor-primaria);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .filme-sala-nome {
+            font-weight: 600;
+            color: #eee;
+            margin-bottom: 5px;
+        }
+
+        .filme-sala-tempo {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        .filme-sala-duracao {
+            color: var(--cor-primaria);
+            font-weight: 600;
+        }
+
+        .resumo {
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.1) 0%, rgba(229, 9, 20, 0.05) 100%);
+            border: 2px solid var(--cor-primaria);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .resumo h3 {
+            color: var(--cor-primaria);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--cor-primaria);
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-valor {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--cor-primaria);
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        .algoritmo-info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid rgba(33, 150, 243, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .algoritmo-info strong {
+            color: #2196f3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 2px solid rgba(229, 9, 20, 0.3);
+            margin-top: 60px;
+            color: #999;
+        }
+
+        @media (max-width: 1024px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .salas-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll customizado */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cor-primaria);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #cc0812;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 AGENDADOR DE FILMES</h1>
+        </header>
+
+        <div class="layout">
+            <!-- Painel Esquerdo - Entrada de Dados -->
+            <div class="painel">
+                <h2>🎬 Adicionar Filme</h2>
+
+                <div class="algoritmo-info">
+                    <strong>Como funciona:</strong> O algoritmo ordena filmes por tempo de início e aloca greedily em salas, criando novas apenas quando necessário. Resultado: mínimo de salas!
+                </div>
+
+                <div id="mensagem" class="mensagem"></div>
+
+                <div class="form-grupo">
+                    <label for="nome">Nome do Filme:</label>
+                    <input type="text" id="nome" placeholder="Ex: Homem-Aranha">
+                </div>
+
+                <div class="form-grupo">
+                    <label for="inicio">Início (HH:MM):</label>
+                    <input type="time" id="inicio" placeholder="10:00">
+                </div>
+
+                <div class="form-grupo">
+                    <label for="fim">Término (HH:MM):</label>
+                    <input type="time" id="fim" placeholder="12:30">
+                </div>
+
+                <div class="botoes">
+                    <button class="btn-primaria" onclick="adicionarFilme()">Adicionar</button>
+                    <button class="btn-secundaria btn-sucesso" onclick="carregar_exemplo()">Exemplo</button>
+                    <button class="btn-secundaria btn-aviso" onclick="limpar_agenda()">Limpar</button>
+                </div>
+
+                <h2 style="margin-top: 30px;">📽️ Filmes Adicionados</h2>
+                <div id="listaFilmes" class="lista-filmes">
+                    <div class="vazio">Nenhum filme adicionado</div>
+                </div>
+
+                <button class="btn-primaria" style="margin-top: 20px;" onclick="otimizar_agenda()">Alocar nas Salas</button>
+            </div>
+
+            <!-- Painel Direito - Resultado -->
+            <div class="painel">
+                <h2>Alocação nas Salas</h2>
+                <div id="resultado" class="vazio" style="padding: 60px 20px;">
+                    Clique em "Alocar nas Salas" para ver o resultado
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumo da Alocação -->
+        <div id="resumoContainer" style="display: none;">
+            <div class="resumo">
+                <h3>📊 Resumo da Alocação</h3>
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Total de Filmes</div>
+                        <div class="stat-valor" id="totalFilmes">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Salas Necessárias</div>
+                        <div class="stat-valor" id="salasNecessarias">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Média por Sala</div>
+                        <div class="stat-valor" id="mediaFilmes">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🎬 Agendador Inteligente de Filmes | Algoritmo: Interval Partitioning</p>
+        </footer>
+    </div>
+
+    <script>
+        // Atualizar lista de filmes
+        async function atualizarListaFilmes() {
+            try {
+                const response = await fetch('/api/filmes');
+                const filmes = await response.json();
+
+                const listaDiv = document.getElementById('listaFilmes');
+                if (filmes.length === 0) {
+                    listaDiv.innerHTML = '<div class="vazio">Nenhum filme adicionado</div>';
+                    return;
+                }
+
+                listaDiv.innerHTML = filmes.map(f => `
+                    <div class="filme-item">
+                        <div class="filme-info">
+                            <div class="filme-nome">${f.nome}</div>
+                            <div class="filme-horario">${f.inicio} - ${f.fim}</div>
+                        </div>
+                        <div class="filme-duracao">${f.duracao}min</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erro ao carregar filmes:', error);
+            }
+        }
+
+        // Adicionar filme
+        async function adicionarFilme() {
+            const nome = document.getElementById('nome').value.trim();
+            const inicio = document.getElementById('inicio').value;
+            const fim = document.getElementById('fim').value;
+
+            if (!nome || !inicio || !fim) {
+                mostrarMensagem('Preencha todos os campos!', 'erro');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/filmes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, inicio, fim })
+                });
+                const resultado = await response.json();
+
+                if (resultado.sucesso) {
+                    mostrarMensagem(resultado.mensagem, 'sucesso');
+                    document.getElementById('nome').value = '';
+                    document.getElementById('inicio').value = '';
+                    document.getElementById('fim').value = '';
+                    atualizarListaFilmes();
+                } else {
+                    mostrarMensagem(resultado.mensagem, 'erro');
+                }
+            } catch (error) {
+                mostrarMensagem('Erro ao adicionar filme', 'erro');
+            }
+        }
+
+        // Otimizar agenda
+        async function otimizar_agenda() {
+            try {
+                const response = await fetch('/api/otimizar', { method: 'POST' });
+                const resultado = await response.json();
+
+                if (!resultado.sucesso || resultado.salas.length === 0) {
+                    mostrarMensagem('Adicione pelo menos um filme primeiro!', 'info');
+                    return;
+                }
+
+                // Mostrar salas
+                const resultadoDiv = document.getElementById('resultado');
+                resultadoDiv.innerHTML = '<div class="salas-container">' + resultado.salas.map(sala => `
+                    <div class="sala">
+                        <div class="sala-numero">SALA ${sala.numero}</div>
+                        ${sala.filmes.map(f => `
+                            <div class="filme-sala">
+                                <div class="filme-sala-nome">${f.nome}</div>
+                                <div class="filme-sala-tempo">
+                                    <span>${f.inicio} - ${f.fim}</span>
+                                    <span class="filme-sala-duracao">${f.duracao}min</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('') + '</div>';
+
+                // Mostrar resumo
+                document.getElementById('totalFilmes').textContent = resultado.total_filmes;
+                document.getElementById('salasNecessarias').textContent = resultado.salas_necessarias;
+                document.getElementById('mediaFilmes').textContent = resultado.media_filmes_sala;
+                document.getElementById('resumoContainer').style.display = 'block';
+
+                mostrarMensagem(`✅ Alocação otimizada! ${resultado.total_filmes} filmes em ${resultado.salas_necessarias} salas.`, 'sucesso');
+            } catch (error) {
+                mostrarMensagem('Erro ao otimizar agenda', 'erro');
+            }
+        }
+
+        // Carregar exemplo
+        async function carregar_exemplo() {
+            try {
+                const response = await fetch('/api/exemplo', { method: 'POST' });
+                const resultado = await response.json();
+                mostrarMensagem('✅ 6 filmes de exemplo carregados!', 'sucesso');
+                atualizarListaFilmes();
+            } catch (error) {
+                mostrarMensagem('Erro ao carregar exemplo', 'erro');
+            }
+        }
+
+        // Limpar agenda
+        async function limpar_agenda() {
+            if (confirm('Tem certeza que deseja limpar toda a agenda?')) {
+                try {
+                    const response = await fetch('/api/limpar', { method: 'POST' });
+                    const resultado = await response.json();
+                    mostrarMensagem('Agenda limpa!', 'sucesso');
+                    atualizarListaFilmes();
+                    document.getElementById('resultado').innerHTML = '<div class="vazio" style="padding: 60px 20px;">Clique em "Alocar nas Salas" para ver o resultado</div>';
+                    document.getElementById('resumoContainer').style.display = 'none';
+                } catch (error) {
+                    mostrarMensagem('Erro ao limpar agenda', 'erro');
+                }
+            }
+        }
+
+        // Mostrar mensagem
+        function mostrarMensagem(texto, tipo) {
+            const msgDiv = document.getElementById('mensagem');
+            msgDiv.textContent = texto;
+            msgDiv.className = `mensagem ${tipo}`;
+            setTimeout(() => msgDiv.className = 'mensagem', 4000);
+        }
+
+        // Inicializar
+        atualizarListaFilmes();
+    </script>
+</body>
+</html>
