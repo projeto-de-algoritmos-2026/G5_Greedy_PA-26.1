@@ -12,8 +12,8 @@
 <div align = "center">
 <table>
    <tr>
-      <td align="center"><a href="https://github.com/HauedyWS"><img src="./Fotos/hauedy.jpeg" alt="hauedy" width="150"/><br /><sub><b>Hauedy Wegener Soares</b></sub></a><br/></td>
-      <td align="center"><a href="https://github.com/LeticiaResende23"><img src="./Fotos/let.jpeg" alt="Leticia" width="150"/><br /><sub><b>Letícia Resende da Silva</b></sub></a><br />
+      <td align="center"><a href="https://github.com/HauedyWS"><img src="templates/Fotos/hauedy.jpeg" alt="hauedy" width="150"/><br /><sub><b>Hauedy Wegener Soares</b></sub></a><br/></td>
+      <td align="center"><a href="https://github.com/LeticiaResende23"><img src="templates/Fotos/let.jpeg" alt="Leticia" width="150"/><br /><sub><b>Letícia Resende da Silva</b></sub></a><br />
    </tr>
 </table>
 
@@ -35,49 +35,49 @@ Cada sessão de filme é tratada como um intervalo (início, fim). O algoritmo p
 <h3>Tela Principal</h3>
 
 <p align="center">
-   <img src="./Fotos/0.png" alt="Tela principal" width="600"/>
+   <img src="templates/Fotos/0.png" alt="Tela principal" width="600"/>
 </p>
 
 <h3>Indicando hora de início</h3>
 
 <p align="center">
-   <img src="./Fotos/1.png" alt="hora inicio" width="600"/>
+   <img src="templates/Fotos/1.png" alt="hora inicio" width="600"/>
 </p>
 
 <h3>Indicando hora de Término</h3>
 
 <p align="center">
-   <img src="./Fotos/2.png" alt="Alocação" width="600"/>
+   <img src="templates/Fotos/2.png" alt="Alocação" width="600"/>
 </p>
 
 <h3>Adicionando Filme</h3>
 
 <p align="center">
-   <img src="./Fotos/3.png" alt="Resumo" width="600"/>
+   <img src="templates/Fotos/3.png" alt="Resumo" width="600"/>
 </p>
 
 <h3>Adicionando nas Salas</h3>
 
 <p align="center">
-   <img src="./Fotos/4.png" alt="Resumo" width="600"/>
+   <img src="templates/Fotos/4.png" alt="Resumo" width="600"/>
 </p>
 
 <h3>Alocação nas Salas</h3>
 
 <p align="center">
-   <img src="./Fotos/5.png" alt="Resumo" width="600"/>
+   <img src="templates/Fotos/5.png" alt="Resumo" width="600"/>
 </p>
 
 <h3>Limpando</h3>
 
 <p align="center">
-   <img src="./Fotos/6.png" alt="Resumo" width="600"/>
+   <img src="templates/Fotos/6.png" alt="Resumo" width="600"/>
 </p>
 
 <h3>Agenda Limpa</h3>
 
 <p align="center">
-   <img src="./Fotos/7.png" alt="Resumo" width="600"/>
+   <img src="templates/Fotos/7.png" alt="Resumo" width="600"/>
 </p>
 
 
